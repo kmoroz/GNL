@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line.c                                    :+:    :+:            */
+/*   get_next_line_bonus.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/12 16:55:56 by ksmorozo      ########   odam.nl         */
+/*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
+/*   Updated: 2020/12/12 13:33:36 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int		main()
 	char	*line;
 	int		fd;
 	
-	fd = open("shrek small.txt", O_RDONLY);
+	fd = open("abc.txt", O_RDONLY);
 	while (get_next_line(fd, &line))
-		printf("%s\n", line);
+		printf("%s", line);
 }
