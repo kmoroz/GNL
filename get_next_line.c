@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/13 15:32:24 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/14 18:39:32 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,14 @@ char	*check_remainder(char *remainder, char **line)
 			*line = ft_strdup(remainder);
 			new_line_ptr++;
 			ft_strlcpy(remainder, new_line_ptr, ft_strlen(new_line_ptr) + 1);
-			free(*line);
 		}
 		else
 		{
 			*line = ft_strdup(remainder);
 			ft_bzero(remainder, ft_strlen(remainder));
-			free(*line);
 		}
 	else
-	{
-		*line = (char*)malloc(1);
-		free(*line);
-	}
+		*line = calloc(1, 1);
 	return (new_line_ptr);
 }
 
@@ -88,8 +83,8 @@ int		get_next_line(int fd, char **line)
 			*new_line_ptr = '\0';
 			remainder = ft_strdup(new_line_ptr + 1);
 		}
-		temp = ft_strjoin(*line, buff);
-		*line = temp;
+		temp = *line;
+		*line = ft_strjoin(*line, buff);
 		free(temp);
 	}
 	if (ft_strlen(*line) || amount_read)
@@ -105,5 +100,9 @@ int		main()
 	
 	fd = open("shrek small.txt", O_RDONLY);
 	while (get_next_line(fd, &line))
+	{
 		printf("%s\n", line);
+		free(line);
+	}	
+	free(line);
 }
