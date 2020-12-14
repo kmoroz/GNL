@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/12 13:33:36 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/14 18:57:51 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,6 @@
 #include <unistd.h> //read
 #include <stdlib.h> //free
 #include "get_next_line.h"
-
-char	*ft_strchr(const char *str, int ch)
-{
-	unsigned char	*modifiable_str;
-
-	modifiable_str = (unsigned char *)str;
-	while (*modifiable_str != ch)
-	{
-		if (*modifiable_str == '\0')
-			return (NULL);
-		modifiable_str++;
-	}
-	return ((char*)modifiable_str);
-}
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -43,6 +29,31 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
+void	*ft_calloc(size_t nitems, size_t size)
+{
+	void *pointer;
+
+	pointer = malloc(nitems * size);
+	if (pointer == NULL)
+		return (NULL);
+	ft_bzero(pointer, nitems * size);
+	return (pointer);
+}
+
+char	*ft_strchr(const char *str, int ch)
+{
+	unsigned char	*modifiable_str;
+
+	modifiable_str = (unsigned char *)str;
+	while (*modifiable_str != ch)
+	{
+		if (*modifiable_str == '\0')
+			return (NULL);
+		modifiable_str++;
+	}
+	return ((char*)modifiable_str);
+}
+
 char	*check_remainder(char *remainder, char **line)
 {
 	char *new_line_ptr;
@@ -53,7 +64,8 @@ char	*check_remainder(char *remainder, char **line)
 		{
 			*new_line_ptr = '\0';
 			*line = ft_strdup(remainder);
-			ft_strlcpy(remainder, new_line_ptr + 1, ft_strlen(new_line_ptr));
+			new_line_ptr++;
+			ft_strlcpy(remainder, new_line_ptr, ft_strlen(new_line_ptr) + 1);
 		}
 		else
 		{
@@ -61,7 +73,7 @@ char	*check_remainder(char *remainder, char **line)
 			ft_bzero(remainder, ft_strlen(remainder));
 		}
 	else
-		*line = (char*)malloc(1);
+		*line = ft_calloc(1, 1);
 	return (new_line_ptr);
 }
 
@@ -83,7 +95,7 @@ int		get_next_line(int fd, char **line)
 			remainder = ft_strdup(new_line_ptr + 1);
 		}
 		temp = *line;
-		*line = ft_strjoin(temp, buff);
+		*line = ft_strjoin(*line, buff);
 		free(temp);
 	}
 	if (ft_strlen(*line) || amount_read)
@@ -97,7 +109,11 @@ int		main()
 	char	*line;
 	int		fd;
 	
-	fd = open("abc.txt", O_RDONLY);
+	fd = open("shrek small.txt", O_RDONLY);
 	while (get_next_line(fd, &line))
-		printf("%s", line);
+	{
+		printf("%s\n", line);
+		free(line);
+	}	
+	free(line);
 }

@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/14 18:39:32 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/14 18:55:59 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,6 @@
 #include <unistd.h> //read
 #include <stdlib.h> //free
 #include "get_next_line.h"
-
-char	*ft_strchr(const char *str, int ch)
-{
-	unsigned char	*modifiable_str;
-
-	modifiable_str = (unsigned char *)str;
-	while (*modifiable_str != ch)
-	{
-		if (*modifiable_str == '\0')
-			return (NULL);
-		modifiable_str++;
-	}
-	return ((char*)modifiable_str);
-}
 
 void	ft_bzero(void *s, size_t n)
 {
@@ -41,6 +27,31 @@ void	ft_bzero(void *s, size_t n)
 		str[count] = '\0';
 		count++;
 	}
+}
+
+void	*ft_calloc(size_t nitems, size_t size)
+{
+	void *pointer;
+
+	pointer = malloc(nitems * size);
+	if (pointer == NULL)
+		return (NULL);
+	ft_bzero(pointer, nitems * size);
+	return (pointer);
+}
+
+char	*ft_strchr(const char *str, int ch)
+{
+	unsigned char	*modifiable_str;
+
+	modifiable_str = (unsigned char *)str;
+	while (*modifiable_str != ch)
+	{
+		if (*modifiable_str == '\0')
+			return (NULL);
+		modifiable_str++;
+	}
+	return ((char*)modifiable_str);
 }
 
 char	*check_remainder(char *remainder, char **line)
@@ -62,7 +73,7 @@ char	*check_remainder(char *remainder, char **line)
 			ft_bzero(remainder, ft_strlen(remainder));
 		}
 	else
-		*line = calloc(1, 1);
+		*line = ft_calloc(1, 1);
 	return (new_line_ptr);
 }
 
