@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/10 13:42:20 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/13 12:54:34 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/14 19:03:36 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define GET_NEXT_LINE_H
 
 # include <stddef.h>
-# ifndef BUFF_SIZE
-#  define BUFF_SIZE 35
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 35
 # endif
 
 char	*ft_strjoin(char const *s1, char const *s2);

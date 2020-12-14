@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/14 18:57:51 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/14 19:03:38 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,14 +79,14 @@ char	*check_remainder(char *remainder, char **line)
 
 int		get_next_line(int fd, char **line)
 {
-	char		buff[BUFF_SIZE + 1];
+	char		buff[BUFFER_SIZE + 1];
 	int			amount_read;
 	char		*new_line_ptr;
 	static char *remainder;
 	char		*temp;
 
 	new_line_ptr = check_remainder(remainder, line);
-	while (!new_line_ptr && (amount_read = read(fd, buff, BUFF_SIZE)))
+	while (!new_line_ptr && (amount_read = read(fd, buff, BUFFER_SIZE)))
 	{
 		buff[amount_read] = '\0';
 		if ((new_line_ptr = ft_strchr(buff, '\n')))
