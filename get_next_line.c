@@ -6,13 +6,14 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/14 19:03:34 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/15 20:08:27 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h> //open
 #include <unistd.h> //read
 #include <stdlib.h> //free
+#include <stdio.h>
 #include "get_next_line.h"
 
 void	ft_bzero(void *s, size_t n)
@@ -108,7 +109,6 @@ int		main()
 {
 	char	*line;
 	int		fd;
-	
 	fd = open("shrek small.txt", O_RDONLY);
 	while (get_next_line(fd, &line))
 	{
