@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:17:39 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/14 19:03:39 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/18 14:05:12 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 
 typedef struct	s_file_descriptor
 {
-	int						fd;
-	char					*remainder;
-	struct file_descriptor	*next;
+	int							fd;
+	char						*remainder;
+	struct s_file_descriptor	*next;
 }				t_fd;
 char			*ft_strjoin(char const *s1, char const *s2);
 int				get_next_line(int fd, char **line);
