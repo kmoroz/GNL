@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2020/12/15 12:40:03 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2020/12/18 17:20:34 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ int		get_next_line(int fd, char **line)
 	static t_fd		*head;
 	t_fd			*current;
 
-	if (fd < 0 || !*line)
+	if (fd < 0 || !line)
 		return (-1);
 	if (!head)
 		head = ft_lstnew(fd);
@@ -140,35 +140,19 @@ int		get_next_line(int fd, char **line)
 	return (get_line(current->fd, line, &current->remainder));
 }
 
-int	main()
+int     main(int argc, char **argv)
 {
-	char	*line;
-	int		fd1;
-	int		fd2;
-	int		count;
-	
-	count = 1;
-	fd1 = open("shrek small.txt", O_RDONLY);
-	fd2 = open("abc.txt", O_RDONLY);
-	while (get_next_line(fd1, &line) && count <= 3)
-	{
-		printf("%s\n", line);
-		free(line);
-		count++;
-	}
-		free(line);
-	while (get_next_line(fd2, &line) && count <= 6)
-	{
-		printf("%s\n", line);
-		free(line);
-		count++;
-	}
-		free(line);
-	while (get_next_line(fd1, &line) && count <= 9)
-	{
-		printf("%s\n", line);
-		free(line);
-		count++;
-	}
-	free(line);
+    char    *line;
+    int     fd;
+
+    if (argc == 2)
+        fd = open(argv[1], O_RDONLY);
+	else
+		fd = 0;
+    while (get_next_line(fd, &line))
+    {
+        printf("%s\n", line);
+        free(line);
+    }   
+    free(line);
 }
