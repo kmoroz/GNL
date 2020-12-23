@@ -80,15 +80,24 @@ char	*check_remainder(char *remainder, char **line)
 
 int		get_next_line(int fd, char **line)
 {
-	char		buff[BUFFER_SIZE + 1];
+	char		*buff;
 	int			amount_read;
 	char		*new_line_ptr;
 	static char *remainder;
 	char		*temp;
 
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
+		return (-1);
+	amount_read = 1;
 	new_line_ptr = check_remainder(remainder, line);
-	while (!new_line_ptr && (amount_read = read(fd, buff, BUFFER_SIZE)))
+	while (!new_line_ptr && amount_read)
 	{
+		buff = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+		if (!buff)
+			return (-1);
+		amount_read = read(fd, buff, BUFFER_SIZE);
+		if (amount_read < 0)
+			return (-1);
 		buff[amount_read] = '\0';
 		if ((new_line_ptr = ft_strchr(buff, '\n')))
 		{
@@ -101,25 +110,24 @@ int		get_next_line(int fd, char **line)
 		*line = ft_strjoin(*line, buff);
 		free(temp);
 	}
-	if (ft_strlen(*line) || amount_read)
-		return (1);
-	else
-		return (0);
+	return (!remainder || !amount_read ? 0 : 1);
 }
 
-int     main(int argc, char **argv)
-{
-    char    *line;
-    int     fd;
-
-    if (argc == 2)
-        fd = open(argv[1], O_RDONLY);
-	else
-		fd = 0;
-    while (get_next_line(fd, &line))
-    {
-        printf("%s\n", line);
-        free(line);
-    }   
-    free(line);
-}
+/*
+** int     main(int argc, char **argv)
+** {
+**     char    *line;
+**     int     fd;
+** 
+**     if (argc == 2)
+**         fd = open(argv[1], O_RDONLY);
+** 	else
+** 		fd = 0;
+**     while (get_next_line(fd, &line))
+**     {
+**         printf("%s\n", line);
+**         free(line);
+**     }
+**     free(line);
+** }
+*/
