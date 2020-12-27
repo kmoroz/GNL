@@ -12,6 +12,20 @@
 
 #include <stdlib.h>
 
+char	*ft_strchr(const char *str, int ch)
+{
+	unsigned char	*modifiable_str;
+
+	modifiable_str = (unsigned char *)str;
+	while (*modifiable_str != ch)
+	{
+		if (*modifiable_str == '\0')
+			return (NULL);
+		modifiable_str++;
+	}
+	return ((char*)modifiable_str);
+}
+
 size_t	ft_strlen(const char *str)
 {
 	size_t count;
@@ -38,34 +52,26 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	return (ft_strlen(src));
 }
 
-void	*ft_memcpy(void *dest, const void *src, size_t n)
-{
-	char	*buffer1;
-	char	*buffer2;
-	size_t	count;
-
-	buffer1 = (char*)src;
-	buffer2 = dest;
-	count = 0;
-	if (src == NULL && dest == NULL)
-		return (NULL);
-	while (count < n)
-	{
-		buffer2[count] = buffer1[count];
-		count++;
-	}
-	return (dest);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char *new_str;
+	char	*new_str;
+	size_t	count;
 
+	count = 0;
 	new_str = (char*)malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (new_str == NULL)
 		return (NULL);
-	ft_memcpy(new_str, s1, ft_strlen(s1));
-	ft_memcpy(new_str + ft_strlen(s1), s2, ft_strlen(s2) + 1);
+	while (count < ft_strlen(s1))
+	{
+		new_str[count] = s1[count];
+		count++;
+	}
+	count = 0;
+	while (count < ft_strlen(s2) + 1)
+	{
+		new_str[count + ft_strlen(s1)] = s2[count];
+		count++;
+	}
 	return (new_str);
 }
 

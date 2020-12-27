@@ -85,7 +85,6 @@ int		get_line(int fd, char **line, char **remainder)
 	char		*temp;
 	char		*temp_rem;
 
-	
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	amount_read = 1;
@@ -112,10 +111,7 @@ int		get_line(int fd, char **line, char **remainder)
 			return (-1);
 		free(temp);
 	}
-	if (!*remainder || !amount_read)
-		return (0);
-	else
-		return (1);
+	return (!*remainder || !amount_read ? 0 : 1);
 }
 
 t_fd	*ft_lstnew(int fd)

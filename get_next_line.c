@@ -10,13 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h> //open
 #include <unistd.h> //read
 #include <stdlib.h> //free
-#include <stdio.h>
 #include "get_next_line.h"
 
-void	ft_bzero(void *s, size_t n)
+void		ft_bzero(void *s, size_t n)
 {
 	size_t	count;
 	char	*str;
@@ -30,38 +28,15 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-void	*ft_calloc(size_t nitems, size_t size)
-{
-	void *pointer;
-
-	pointer = malloc(nitems * size);
-	if (pointer == NULL)
-		return (NULL);
-	ft_bzero(pointer, nitems * size);
-	return (pointer);
-}
-
-char	*ft_strchr(const char *str, int ch)
-{
-	unsigned char	*modifiable_str;
-
-	modifiable_str = (unsigned char *)str;
-	while (*modifiable_str != ch)
-	{
-		if (*modifiable_str == '\0')
-			return (NULL);
-		modifiable_str++;
-	}
-	return ((char*)modifiable_str);
-}
-
-char	*check_remainder(char *remainder, char **line)
+char		*check_remainder(char *remainder, char **line)
 {
 	char *new_line_ptr;
 
 	new_line_ptr = NULL;
 	if (remainder)
-		if ((new_line_ptr = ft_strchr(remainder, '\n')))
+	{
+		new_line_ptr = ft_strchr(remainder, '\n');
+		if (new_line_ptr)
 		{
 			*new_line_ptr = '\0';
 			*line = ft_strdup(remainder);
@@ -73,61 +48,92 @@ char	*check_remainder(char *remainder, char **line)
 			*line = ft_strdup(remainder);
 			ft_bzero(remainder, ft_strlen(remainder));
 		}
+	}
 	else
-		*line = ft_calloc(1, 1);
+	{
+		*line = malloc(1);
+		ft_bzero(*line, 1);
+	}
 	return (new_line_ptr);
 }
 
-int		get_next_line(int fd, char **line)
+t_read_data	get_read_data(int fd)
 {
-	char		*buff;
-	int			amount_read;
-	char		*new_line_ptr;
-	static char *remainder;
-	char		*temp;
+	t_read_data read_data;
+
+	read_data.buff = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!read_data.buff)
+	{
+		read_data.read_successful = 0;
+		return (read_data);
+	}
+	read_data.amount_read = read(fd, read_data.buff, BUFFER_SIZE);
+	if (read_data.amount_read < 0)
+	{
+		read_data.read_successful = 0;
+		return (read_data);
+	}
+	read_data.buff[read_data.amount_read] = '\0';
+	read_data.read_successful = 1;
+	return (read_data);
+}
+
+int			get_line(char **new_line_ptr, t_read_data read_data, char **remainder)
+{
+	*new_line_ptr = ft_strchr(read_data.buff, '\n');
+	if (*new_line_ptr)
+	{
+		if (*remainder)
+			free(*remainder);
+		**new_line_ptr = '\0';
+		*remainder = ft_strdup(*new_line_ptr + 1);
+		if (!*remainder)
+			return (0);
+	}
+	return (1);
+}
+
+int			get_next_line(int fd, char **line)
+{
+	t_read_data		read_data;
+	char			*new_line_ptr;
+	static char		*remainder;
+	char			*temp;
+	int				line_assigned;
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	amount_read = 1;
 	new_line_ptr = check_remainder(remainder, line);
-	while (!new_line_ptr && amount_read)
+	read_data.amount_read = 1;
+	while (!new_line_ptr && read_data.amount_read)
 	{
-		buff = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buff)
+		read_data = get_read_data(fd);
+		if (!read_data.read_successful)
 			return (-1);
-		amount_read = read(fd, buff, BUFFER_SIZE);
-		if (amount_read < 0)
+		line_assigned = get_line(&new_line_ptr, read_data, &remainder);
+		if (!line_assigned)
 			return (-1);
-		buff[amount_read] = '\0';
-		if ((new_line_ptr = ft_strchr(buff, '\n')))
-		{
-			if (remainder)
-				free(remainder);
-			*new_line_ptr = '\0';
-			remainder = ft_strdup(new_line_ptr + 1);
-		}
 		temp = *line;
-		*line = ft_strjoin(*line, buff);
+		*line = ft_strjoin(*line, read_data.buff);
 		free(temp);
 	}
-	return (!remainder || !amount_read ? 0 : 1);
+	return (!remainder || !read_data.amount_read ? 0 : 1);
 }
 
+#include <stdio.h>
+#include <fcntl.h> //open
 /*
 ** int     main(int argc, char **argv)
 ** {
 **     char    *line;
 **     int     fd;
-** 
-**     if (argc == 2)
-**         fd = open(argv[1], O_RDONLY);
-** 	else
-** 		fd = 0;
+**     fd = open("shrek small.txt", O_RDONLY);
 **     while (get_next_line(fd, &line))
 **     {
 **         printf("%s\n", line);
 **         free(line);
 **     }
+** 	printf("%s\n", line);
 **     free(line);
 ** }
 */
