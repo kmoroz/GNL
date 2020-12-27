@@ -29,31 +29,6 @@ void	ft_bzero(void *s, size_t n)
 	}
 }
 
-void	*ft_calloc(size_t nitems, size_t size)
-{
-	void *pointer;
-
-	pointer = malloc(nitems * size);
-	if (pointer == NULL)
-		return (NULL);
-	ft_bzero(pointer, nitems * size);
-	return (pointer);
-}
-
-char	*ft_strchr(const char *str, int ch)
-{
-	unsigned char	*modifiable_str;
-
-	modifiable_str = (unsigned char *)str;
-	while (*modifiable_str != ch)
-	{
-		if (*modifiable_str == '\0')
-			return (NULL);
-		modifiable_str++;
-	}
-	return ((char*)modifiable_str);
-}
-
 char	*check_remainder(char *remainder, char **line)
 {
 	char *new_line_ptr;
@@ -73,7 +48,10 @@ char	*check_remainder(char *remainder, char **line)
 			ft_bzero(remainder, ft_strlen(remainder));
 		}
 	else
-		*line = ft_calloc(1, 1);
+	{
+		*line = malloc(1);
+		ft_bzero(*line, 1);
+	}
 	return (new_line_ptr);
 }
 
