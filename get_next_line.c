@@ -78,7 +78,8 @@ t_read_data	get_read_data(int fd)
 	return (read_data);
 }
 
-int			get_line(char **new_line_ptr, t_read_data read_data, char **remainder)
+int			get_line(char **new_line_ptr, t_read_data read_data,
+char **remainder)
 {
 	*new_line_ptr = ft_strchr(read_data.buff, '\n');
 	if (*new_line_ptr)
@@ -116,13 +117,13 @@ int			get_next_line(int fd, char **line)
 		temp = *line;
 		*line = ft_strjoin(*line, read_data.buff);
 		free(temp);
+		free(read_data.buff);
 	}
 	return (!remainder || !read_data.amount_read ? 0 : 1);
 }
-
-#include <stdio.h>
-#include <fcntl.h> //open
 /*
+** #include <stdio.h>
+** #include <fcntl.h> //open
 ** int     main(int argc, char **argv)
 ** {
 **     char    *line;
