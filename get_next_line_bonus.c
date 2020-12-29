@@ -10,32 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h> //open
 #include <unistd.h> //read
 #include <stdlib.h> //free
 #include "get_next_line_bonus.h"
 
-void	ft_bzero(void *s, size_t n)
-{
-	size_t	count;
-	char	*str;
-
-	str = s;
-	count = 0;
-	while (count != n)
-	{
-		str[count] = '\0';
-		count++;
-	}
-}
-
-char	*check_remainder(char *remainder, char **line)
+char		*check_remainder(char *remainder, char **line)
 {
 	char *new_line_ptr;
 
-	new_line_ptr = NULL;
+	new_line_ptr = remainder ? ft_strchr(remainder, '\n') : NULL;
 	if (remainder)
-		if ((new_line_ptr = ft_strchr(remainder, '\n')))
+		if (new_line_ptr)
 		{
 			*new_line_ptr = '\0';
 			*line = ft_strdup(remainder);
@@ -45,54 +30,67 @@ char	*check_remainder(char *remainder, char **line)
 		else
 		{
 			*line = ft_strdup(remainder);
-			ft_bzero(remainder, ft_strlen(remainder));
+			while (*remainder)
+				*remainder++ = '\0';
 		}
 	else
 	{
 		*line = malloc(1);
-		ft_bzero(*line, 1);
+		**line = '\0';
 	}
 	return (new_line_ptr);
 }
 
-int		get_line(int fd, char **line, char **remainder)
+t_read_data	get_read_data(int fd)
 {
-	char		*buff;
-	int			amount_read;
-	char		*new_line_ptr;
-	char		*temp;
-	char		*temp_rem;
+	t_read_data read_data;
 
-	if (fd < 0 || !line || BUFFER_SIZE < 1)
-		return (-1);
-	amount_read = 1;
-	new_line_ptr = check_remainder(*remainder, line);
-	while (!new_line_ptr && amount_read)
+	read_data.buff = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	if (!read_data.buff)
 	{
-		buff = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
-		if (!buff)
-			return (-1);
-		amount_read = read(fd, buff, BUFFER_SIZE);
-		if (amount_read < 0)
-			return (-1);
-		buff[amount_read] = '\0';
-		if ((new_line_ptr = ft_strchr(buff, '\n')))
-		{
-			*new_line_ptr = '\0';
-			temp_rem = *remainder;
-			*remainder = ft_strdup(new_line_ptr + 1);
-			free(temp_rem);
-		}
-		temp = *line;
-		*line = ft_strjoin(*line, buff);
-		if (!*line || amount_read == -1)
-			return (-1);
-		free(temp);
+		read_data.read_successful = 0;
+		return (read_data);
 	}
-	return (!*remainder || !amount_read ? 0 : 1);
+	read_data.amount_read = read(fd, read_data.buff, BUFFER_SIZE);
+	if (read_data.amount_read < 0)
+	{
+		read_data.read_successful = 0;
+		return (read_data);
+	}
+	read_data.buff[read_data.amount_read] = '\0';
+	read_data.read_successful = 1;
+	return (read_data);
 }
 
-t_fd	*ft_lstnew(int fd)
+int			get_line(int fd, char **line, char **remainder)
+{
+	char		*new_line_ptr;
+	char		*temp;
+	t_read_data read_data;
+
+	new_line_ptr = check_remainder(*remainder, line);
+	while (!new_line_ptr && (!read_data.buff || read_data.amount_read))
+	{
+		read_data = get_read_data(fd);
+		if (fd < 0 || !line || BUFFER_SIZE < 1 || !read_data.read_successful)
+			return (-1);
+		new_line_ptr = ft_strchr(read_data.buff, '\n');
+		if (new_line_ptr)
+		{
+			if (*remainder)
+				free(*remainder);
+			*new_line_ptr = '\0';
+			*remainder = ft_strdup(new_line_ptr + 1);
+		}
+		temp = *line;
+		*line = ft_strjoin(*line, read_data.buff);
+		free(temp);
+		free(read_data.buff);
+	}
+	return (!*remainder || !read_data.amount_read ? 0 : 1);
+}
+
+t_fd		*ft_lstnew(int fd)
 {
 	t_fd *new_element;
 
@@ -105,7 +103,7 @@ t_fd	*ft_lstnew(int fd)
 	return (new_element);
 }
 
-int		get_next_line(int fd, char **line)
+int			get_next_line(int fd, char **line)
 {
 	static t_fd		*head;
 	t_fd			*current;
@@ -123,22 +121,20 @@ int		get_next_line(int fd, char **line)
 	}
 	return (get_line(current->fd, line, &current->remainder));
 }
-
 /*
+** #include <stdio.h>
+** #include <fcntl.h> //open
 ** int     main(int argc, char **argv)
 ** {
 **     char    *line;
 **     int     fd;
-** 
-**     if (argc == 2)
-**         fd = open(argv[1], O_RDONLY);
-** 	else
-** 		fd = 0;
+**     fd = open("shrek small.txt", O_RDONLY);
 **     while (get_next_line(fd, &line))
 **     {
 **         printf("%s\n", line);
 **         free(line);
 **     }
+** 	printf("%s\n", line);
 **     free(line);
 ** }
 */

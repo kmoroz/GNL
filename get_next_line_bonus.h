@@ -24,6 +24,12 @@ typedef struct	s_file_descriptor
 	char						*remainder;
 	struct s_file_descriptor	*next;
 }				t_fd;
+typedef struct	s_read_data
+{
+	char					*buff;
+	int						amount_read;
+	int						read_successful;
+}				t_read_data;
 char			*ft_strjoin(char const *s1, char const *s2);
 int				get_next_line(int fd, char **line);
 char			*ft_strdup(const char *src);
