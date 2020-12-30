@@ -14,10 +14,8 @@
 #include <stdlib.h> //free
 #include "get_next_line_bonus.h"
 
-char		*check_remainder(char *remainder, char **line)
+char		*check_remainder(char *remainder, char **line, char *new_line_ptr)
 {
-	char *new_line_ptr;
-
 	new_line_ptr = remainder ? ft_strchr(remainder, '\n') : NULL;
 	if (remainder)
 		if (new_line_ptr)
@@ -31,7 +29,10 @@ char		*check_remainder(char *remainder, char **line)
 		{
 			*line = ft_strdup(remainder);
 			while (*remainder)
-				*remainder++ = '\0';
+			{
+				*remainder = '\0';
+				remainder++;
+			}
 		}
 	else
 	{
@@ -68,7 +69,8 @@ int			get_line(int fd, char **line, char **remainder)
 	char		*temp;
 	t_read_data read_data;
 
-	new_line_ptr = check_remainder(*remainder, line);
+	new_line_ptr = NULL;
+	new_line_ptr = check_remainder(*remainder, line, new_line_ptr);
 	while (!new_line_ptr && (!read_data.buff || read_data.amount_read))
 	{
 		read_data = get_read_data(fd);
