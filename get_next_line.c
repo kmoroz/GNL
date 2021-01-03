@@ -101,10 +101,10 @@ int			get_next_line(int fd, char **line)
 	char			*temp;
 	int				line_assigned;
 
-	read_data.amount_read = 1;
-	*line = check_remainder(remainder, &new_line_ptr);
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
+	read_data.amount_read = 1;
+	*line = check_remainder(remainder, &new_line_ptr);
 	while (!new_line_ptr && read_data.amount_read)
 	{
 		read_data = get_read_data(fd);
