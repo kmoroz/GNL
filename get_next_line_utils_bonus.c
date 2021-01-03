@@ -18,7 +18,7 @@ char	*ft_strchr(const char *str, int ch)
 
 	modifiable_str = (unsigned char *)str;
 	if (!modifiable_str)
-	return (NULL);
+		return (NULL);
 	while (*modifiable_str != ch)
 	{
 		if (*modifiable_str == '\0')
