@@ -51,7 +51,7 @@ char		*check_remainder(char *remainder, char **new_line_ptr)
 		str = malloc(1);
 		if (!str)
 			return (NULL);
-		ft_bzero(str, ft_strlen(str));
+		ft_bzero(str, 1);
 	}
 	return (str);
 }
@@ -101,11 +101,10 @@ int			get_next_line(int fd, char **line)
 	char			*temp;
 	int				line_assigned;
 
-	if (fd < 0 || !line || BUFFER_SIZE < 1)
-		return (-1);
-	new_line_ptr = NULL;
 	read_data.amount_read = 1;
 	*line = check_remainder(remainder, &new_line_ptr);
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
+		return (-1);
 	while (!new_line_ptr && read_data.amount_read)
 	{
 		read_data = get_read_data(fd);

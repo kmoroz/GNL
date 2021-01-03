@@ -14,32 +14,32 @@
 #include <stdlib.h> //free
 #include "get_next_line_bonus.h"
 
-char		*check_remainder(char *remainder, char **line, char *new_line_ptr)
+char		*check_remainder(char *remainder, char **new_line_ptr)
 {
-	new_line_ptr = remainder ? ft_strchr(remainder, '\n') : NULL;
+	char *str;
+
+	*new_line_ptr = ft_strchr(remainder, '\n');
 	if (remainder)
-		if (new_line_ptr)
+		if (*new_line_ptr)
 		{
-			*new_line_ptr = '\0';
-			*line = ft_strdup(remainder);
-			new_line_ptr++;
-			ft_strlcpy(remainder, new_line_ptr, ft_strlen(new_line_ptr) + 1);
+			**new_line_ptr = '\0';
+			str = ft_strdup(remainder);
+			(*new_line_ptr)++;
+			ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
 		}
 		else
 		{
-			*line = ft_strdup(remainder);
-			while (*remainder)
-			{
-				*remainder = '\0';
-				remainder++;
-			}
+			str = ft_strdup(remainder);
+			*remainder = '\0';
 		}
 	else
 	{
-		*line = malloc(1);
-		**line = '\0';
+		str = malloc(1);
+		if (!str)
+			return (NULL);
+		*str = '\0';
 	}
-	return (new_line_ptr);
+	return (str);
 }
 
 t_read_data	get_read_data(int fd)
@@ -69,8 +69,8 @@ int			get_line(int fd, char **line, char **remainder)
 	char		*temp;
 	t_read_data read_data;
 
-	new_line_ptr = NULL;
-	new_line_ptr = check_remainder(*remainder, line, new_line_ptr);
+	read_data.amount_read = 1;
+	*line = check_remainder(*remainder, &new_line_ptr);
 	while (!new_line_ptr && (!read_data.buff || read_data.amount_read))
 	{
 		read_data = get_read_data(fd);
