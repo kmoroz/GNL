@@ -28,33 +28,32 @@ void		ft_bzero(void *s, size_t n)
 	}
 }
 
-char		*check_remainder(char *remainder, char **line)
+char		*check_remainder(char *remainder, char **new_line_ptr)
 {
-	char *new_line_ptr;
+	char *str;
 
-	new_line_ptr = NULL;
+	*new_line_ptr = ft_strchr(remainder, '\n');
 	if (remainder)
-	{
-		new_line_ptr = ft_strchr(remainder, '\n');
-		if (new_line_ptr)
+		if (*new_line_ptr)
 		{
-			*new_line_ptr = '\0';
-			*line = ft_strdup(remainder);
-			new_line_ptr++;
-			ft_strlcpy(remainder, new_line_ptr, ft_strlen(new_line_ptr) + 1);
+			**new_line_ptr = '\0';
+			str = ft_strdup(remainder);
+			(*new_line_ptr)++;
+			ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
 		}
 		else
 		{
-			*line = ft_strdup(remainder);
+			str = ft_strdup(remainder);
 			ft_bzero(remainder, ft_strlen(remainder));
 		}
-	}
 	else
 	{
-		*line = malloc(1);
-		ft_bzero(*line, 1);
+		str = malloc(1);
+		if (!str)
+			return (NULL);
+		ft_bzero(str, ft_strlen(str));
 	}
-	return (new_line_ptr);
+	return (str);
 }
 
 t_read_data	get_read_data(int fd)
@@ -104,8 +103,9 @@ int			get_next_line(int fd, char **line)
 
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
-	new_line_ptr = check_remainder(remainder, line);
+	new_line_ptr = NULL;
 	read_data.amount_read = 1;
+	*line = check_remainder(remainder, &new_line_ptr);
 	while (!new_line_ptr && read_data.amount_read)
 	{
 		read_data = get_read_data(fd);
