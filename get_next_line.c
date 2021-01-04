@@ -108,7 +108,7 @@ int			get_next_line(int fd, char **line)
 	while (!new_line_ptr && read_data.amount_read)
 	{
 		read_data = get_read_data(fd);
-		if (!read_data.read_successful)
+		if (!read_data.read_successful || !line)
 			return (-1);
 		line_assigned = get_line(&new_line_ptr, read_data, &remainder);
 		if (!line_assigned)
