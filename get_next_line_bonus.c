@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h> //read
-#include <stdlib.h> //free
+#include <unistd.h>
+#include <stdlib.h>
 #include "get_next_line_bonus.h"
 
 char		*check_remainder(char *remainder, char **new_line_ptr)
@@ -123,20 +123,3 @@ int			get_next_line(int fd, char **line)
 	}
 	return (get_line(current->fd, line, &current->remainder));
 }
-/*
-** #include <stdio.h>
-** #include <fcntl.h> //open
-** int     main(int argc, char **argv)
-** {
-**     char    *line;
-**     int     fd;
-**     fd = open("shrek small.txt", O_RDONLY);
-**     while (get_next_line(fd, &line))
-**     {
-**         printf("%s\n", line);
-**         free(line);
-**     }
-** 	printf("%s\n", line);
-**     free(line);
-** }
-*/

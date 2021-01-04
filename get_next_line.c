@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h> //read
-#include <stdlib.h> //free
+#include <unistd.h>
+#include <stdlib.h>
 #include "get_next_line.h"
 
 void		ft_bzero(void *s, size_t n)
@@ -120,20 +120,3 @@ int			get_next_line(int fd, char **line)
 	}
 	return (!remainder || !read_data.amount_read ? 0 : 1);
 }
-/*
-** #include <stdio.h>
-** #include <fcntl.h> //open
-** int     main(int argc, char **argv)
-** {
-**     char    *line;
-**     int     fd;
-**     fd = open("shrek small.txt", O_RDONLY);
-**     while (get_next_line(fd, &line))
-**     {
-**         printf("%s\n", line);
-**         free(line);
-**     }
-** 	printf("%s\n", line);
-**     free(line);
-** }
-*/
