@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/06 17:12:00 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/07 16:58:11 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,17 +78,14 @@ t_read_data	get_read_data(int fd)
 }
 
 int			get_line(char **new_line_ptr, t_read_data read_data,
-char **remainder)
+char *remainder)
 {
 	*new_line_ptr = ft_strchr(read_data.buff, '\n');
 	if (*new_line_ptr)
 	{
-		if (*remainder)
-			free(*remainder);
 		**new_line_ptr = '\0';
-		*remainder = ft_strdup(*new_line_ptr + 1);
-		if (!*remainder)
-			return (0);
+		(*new_line_ptr)++;
+		ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
 	}
 	return (1);
 }
@@ -97,7 +94,7 @@ int			get_next_line(int fd, char **line)
 {
 	t_read_data		read_data;
 	char			*new_line_ptr;
-	static char		*remainder;
+	static char		remainder[BUFFER_SIZE];
 	char			*temp;
 	int				line_assigned;
 
@@ -110,7 +107,7 @@ int			get_next_line(int fd, char **line)
 		read_data = get_read_data(fd);
 		if (!read_data.read_successful || !line)
 			return (-1);
-		line_assigned = get_line(&new_line_ptr, read_data, &remainder);
+		line_assigned = get_line(&new_line_ptr, read_data, remainder);
 		if (!line_assigned)
 			return (-1);
 		temp = *line;
@@ -118,5 +115,5 @@ int			get_next_line(int fd, char **line)
 		free(temp);
 		free(read_data.buff);
 	}
-	return (!remainder || !read_data.amount_read ? 0 : 1);
+	return (!read_data.amount_read ? 0 : 1);
 }
