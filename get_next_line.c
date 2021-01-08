@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/08 14:18:10 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/08 17:06:35 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,25 +33,17 @@ char		*check_remainder(char *remainder, char **new_line_ptr)
 	char *str;
 
 	*new_line_ptr = ft_strchr(remainder, '\n');
-	if (remainder)
-		if (*new_line_ptr)
-		{
-			**new_line_ptr = '\0';
-			str = ft_strdup(remainder);
-			(*new_line_ptr)++;
-			ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
-		}
-		else
-		{
-			str = ft_strdup(remainder);
-			ft_bzero(remainder, ft_strlen(remainder));
-		}
+	if (*new_line_ptr)
+	{
+		**new_line_ptr = '\0';
+		str = ft_strdup(remainder);
+		(*new_line_ptr)++;
+		ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
+	}
 	else
 	{
-		str = malloc(1);
-		if (!str)
-			return (NULL);
-		ft_bzero(str, 1);
+		str = ft_strdup(remainder);
+		ft_bzero(remainder, ft_strlen(remainder));
 	}
 	return (str);
 }
