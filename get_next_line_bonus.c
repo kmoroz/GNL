@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/08 14:05:06 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/08 17:27:13 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,10 @@ char		*check_remainder(char *remainder, char **new_line_ptr)
 			ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
 		}
 		else
+		{
 			str = ft_strdup(remainder);
+			*remainder = '\0';
+		}
 	else
 	{
 		str = malloc(1);
