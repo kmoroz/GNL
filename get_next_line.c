@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/07 16:58:11 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/08 14:18:10 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,5 @@ int			get_next_line(int fd, char **line)
 		free(temp);
 		free(read_data.buff);
 	}
-	return (!read_data.amount_read ? 0 : 1);
+	return (read_data.amount_read ? 1 : 0);
 }

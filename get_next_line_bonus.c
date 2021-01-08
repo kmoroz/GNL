@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/06 17:12:35 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/08 14:05:06 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,7 @@ char		*check_remainder(char *remainder, char **new_line_ptr)
 			ft_strlcpy(remainder, *new_line_ptr, ft_strlen(*new_line_ptr) + 1);
 		}
 		else
-		{
 			str = ft_strdup(remainder);
-			*remainder = '\0';
-		}
 	else
 	{
 		str = malloc(1);
@@ -71,18 +68,18 @@ int			get_line(int fd, char **line, char **remainder)
 
 	read_data.amount_read = 1;
 	*line = check_remainder(*remainder, &new_line_ptr);
-	while (!new_line_ptr && (!read_data.buff || read_data.amount_read))
+	while (!new_line_ptr && read_data.amount_read)
 	{
 		read_data = get_read_data(fd);
-		if (fd < 0 || !line || BUFFER_SIZE < 1 || !read_data.read_successful)
+		if (!read_data.read_successful || !line)
 			return (-1);
 		new_line_ptr = ft_strchr(read_data.buff, '\n');
 		if (new_line_ptr)
 		{
-			if (*remainder)
-				free(*remainder);
+			temp = *remainder;
 			*new_line_ptr = '\0';
 			*remainder = ft_strdup(new_line_ptr + 1);
+			free(temp);
 		}
 		temp = *line;
 		*line = ft_strjoin(*line, read_data.buff);
@@ -110,7 +107,7 @@ int			get_next_line(int fd, char **line)
 	static t_fd		*head;
 	t_fd			*current;
 
-	if (fd < 0 || !line)
+	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	if (!head)
 		head = ft_lstnew(fd);
