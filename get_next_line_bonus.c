@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:18:50 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/11 18:27:25 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/12 14:23:10 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,18 +95,51 @@ t_fd		*ft_lstnew(int fd)
 	count = BUFFER_SIZE + 1;
 	new_element = (t_fd *)malloc(sizeof(t_fd));
 	if (!new_element)
-		return (NULL);
+	{
+		new_element->read_successful = 0;
+		return (new_element);
+	}
 	new_element->fd = fd;
 	new_element->remainder = (char *)malloc(count + 1);
 	if (!new_element->remainder)
-		return (NULL);
+	{
+		new_element->read_successful = 0;
+		return (new_element);
+	}
 	while (count)
 	{
 		count--;
 		new_element->remainder[count] = '\0';
 	}
 	new_element->next = NULL;
+	new_element->read_successful = 1;
 	return (new_element);
+}
+
+void		ft_free_node(t_fd **head, int fd)
+{
+	t_fd	*temp;
+	t_fd	*prev;
+
+	temp = *head;
+	prev = NULL;
+	if (temp && temp->fd == fd)
+	{
+		*head = temp->next;
+		free(temp->remainder);
+		free(temp);
+		return ;
+	}
+	while (temp && temp->fd != fd)
+	{
+		prev = temp;
+		temp = temp->next;
+	}
+	if (temp == NULL)
+		return ;
+	prev->next = temp->next;
+	free(temp->remainder);
+	free(temp);
 }
 
 int			get_next_line(int fd, char **line)
@@ -118,22 +151,16 @@ int			get_next_line(int fd, char **line)
 	if (fd < 0 || !line || BUFFER_SIZE < 1)
 		return (-1);
 	if (!head)
-	{
 		head = ft_lstnew(fd);
-		if (!head)
-			return (-1);
-	}
 	current = head;
 	while (current->fd != fd)
 	{
 		if (!current->next)
-		{
 			current->next = ft_lstnew(fd);
-			if (!current->next)
-				return (-1);
-		}
 		current = current->next;
 	}
 	ret = get_line(fd, line, current->remainder);
+	if (ret == 0 || ret == -1 || current->read_successful == 0)
+		ft_free_node(&head, fd);
 	return (ret);
 }

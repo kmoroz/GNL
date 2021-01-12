@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/12 13:17:39 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/06 17:12:28 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/12 13:02:01 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct	s_file_descriptor
 {
 	int							fd;
 	char						*remainder;
+	int							read_successful;
 	struct s_file_descriptor	*next;
 }				t_fd;
 typedef struct	s_read_data
