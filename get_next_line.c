@@ -6,7 +6,7 @@
 /*   By: ksmorozo <ksmorozo@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/09 09:44:38 by ksmorozo      #+#    #+#                 */
-/*   Updated: 2021/01/13 18:39:44 by ksmorozo      ########   odam.nl         */
+/*   Updated: 2021/01/13 19:24:28 by ksmorozo      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int			get_next_line(int fd, char **line)
 		return (-1);
 	read_data.amount_read = 1;
 	*line = check_remainder(remainder, &new_line_ptr);
-	if (!line)
+	if (!*line)
 		return (-1);
 	while (!new_line_ptr && read_data.amount_read)
 	{
@@ -102,7 +102,7 @@ int			get_next_line(int fd, char **line)
 		get_new_line(&new_line_ptr, read_data, remainder);
 		temp = *line;
 		*line = ft_strjoin(*line, read_data.buff);
-		if (!line)
+		if (!*line)
 			return (-1);
 		free(temp);
 		free(read_data.buff);
